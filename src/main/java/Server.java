@@ -27,7 +27,9 @@ public class Server {
                                 closeConnection();
                                 break;
                             }
-                            out.writeUTF("Эхо: " + str);
+                            System.out.println("Client wrote: " + str);
+                            System.out.println("Введите сообщение для клиента: ");
+                            //out.writeUTF("Эхо: " + str);
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -43,7 +45,7 @@ public class Server {
                             Scanner sc = new Scanner(System.in);
                             String messageForClient;
                             messageForClient = sc.nextLine();
-                            out.writeUTF("Server wrote: "+messageForClient);
+                            out.writeUTF(messageForClient);
                         }
                     } catch (IOException e) {
                         e.printStackTrace();

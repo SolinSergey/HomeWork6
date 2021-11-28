@@ -30,7 +30,7 @@ public class ClientController implements Initializable {
         String s = mainTextField.getText();
         s = s.trim();
         if (!s.equals("")){
-            //mainTextArea.appendText(s+"\n");
+            mainTextArea.appendText("Client: "+ s + "\n");
             out.writeUTF(s);
 
 
@@ -74,7 +74,7 @@ public class ClientController implements Initializable {
                             mainTextArea.appendText("Чат завешен");
                             break;
                         }
-                        mainTextArea.appendText(strFromServer);
+                        mainTextArea.appendText("Server wrote: " + strFromServer);
                         mainTextArea.appendText("\n");
                     }
                 } catch (Exception e) {
