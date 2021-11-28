@@ -1,6 +1,3 @@
-import javafx.fxml.FXML;
-import javafx.scene.control.TextArea;
-
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -9,15 +6,16 @@ import java.net.Socket;
 import java.util.Scanner;
 
 public class Server {
+    public static DataInputStream in=null;
+    public static DataOutputStream out=null;
+    public static Socket socket = null;
     public static void main(String[] args) {
-        Socket socket = null;
-
         try (ServerSocket serverSocket = new ServerSocket(8189)) {
             System.out.println("Server is running. Wait conection...");
             socket = serverSocket.accept();
             System.out.println("Client connected.");
-            DataInputStream in = new DataInputStream(socket.getInputStream());
-            DataOutputStream out = new DataOutputStream(socket.getOutputStream());
+            in = new DataInputStream(socket.getInputStream());
+            out = new DataOutputStream(socket.getOutputStream());
             new Thread(new Runnable() {
                 @Override
                 public void run() {
@@ -25,9 +23,11 @@ public class Server {
                         while (true) {
                             String str = in.readUTF();
                             if (str.equalsIgnoreCase("/end")) {
+                                System.out.println("Чат завершен");
+                                closeConnection();
                                 break;
                             }
-                            out.writeUTF("Эхо: "+str);
+                            out.writeUTF("Эхо: " + str);
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -43,7 +43,7 @@ public class Server {
                             Scanner sc = new Scanner(System.in);
                             String messageForClient;
                             messageForClient = sc.nextLine();
-                            out.writeUTF(messageForClient);
+                            out.writeUTF("Server wrote: "+messageForClient);
                         }
                     } catch (IOException e) {
                         e.printStackTrace();
@@ -51,20 +51,26 @@ public class Server {
                 }
 
             }).start();
-
-
-
-
-            /*while (true){
-                String str = in.readUTF();
-                if (str.equals("/end")){
-                    break;
-                }
-                out.writeUTF("Эхо: "+str);
-            }*/
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
+    public static void closeConnection(){
+        try {
+            in.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        try {
+            out.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        try {
+            socket.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
+    }
 }
